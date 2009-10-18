@@ -74,7 +74,7 @@ void targetBoardInit(void)
 		// AO1_1            .... .... .... .... 1... .... .... ....  Port1 Line 1 is AES1
 		// AO1_2            .... .... .... ...1 .... .... .... ....  Port1 Line 2 is AES2
 		// AO1_3            .... .... .... ..1. .... .... .... ....  Port1 Line 3 is AES3
-		audioPortDefault = 0x3e8aa;
+		audioPortDefault = 0x1755;
 		
 
 
@@ -100,7 +100,7 @@ void targetBoardInit(void)
 		// GPIO12           .... .... .... .... .1.. .... .... ....  WCKI
 		// GPIO13           .... .... .... .... 1... .... .... ....  WCKO
 		// ENC1             .... .... .... ...1 .... .... .... ....  No Encoder, use GPIO
-		*((volatile uint32 *) GPCSR_GPIO_SEL) = 0x1e34c;
+		*((volatile uint32 *) GPCSR_GPIO_SEL) = 0x1f000;
 	}
 	else //DICE Mini
 	{  
@@ -177,7 +177,7 @@ void targetBoardInit(void)
 	// GPIO12           .... .... .... .... ...0 .... .... ....  Input (pin used for other func)
 	// GPIO13           .... .... .... .... ..0. .... .... ....  Input (pin used for other func)
 	// GPIO14           .... .... .... .... .0.. .... .... ....  Input (pin used for other func)
-	*((volatile uint32 *) GPIO_A_DDR) = 0x8;
+	*((volatile uint32 *) GPIO_A_DDR) = 0xe3e;
 	*((volatile uint32 *) GPIO_A_DR) = 0x0;   //turn off all GPIO outputs
 	
 }

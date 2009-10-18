@@ -25,11 +25,11 @@
 
 	Use of LED's and Switches in this application
 	LED1	Toggle 1Hz when firmware is running
-	LED2	Computer is attached and streaming enabled
-	LED3	Main clock domain is locked
-	LED4	The AES Master device is locked
-	LED5	The ADAT Receiver is locked
-	LED6	The ADAT Aux Receiver is locked
+	LED2	Unused	
+	LED3	The AES Master device is locked
+	LED4	Computer is attached and streaming enabled
+	LED5	Main clock domain is locked
+	LED6	Unused
 	LED7	Unused
 	LED8	Unused
 	
@@ -59,7 +59,7 @@
 #include "myApp.h"
 #include "myModes.h"
 #include "sps.h"
-#include "metering.h"
+//#include "metering.h"
 
 #ifdef _CLI_TOOL_MYAPP
 #include "myAppCli.h"
@@ -113,7 +113,7 @@ static MODE_CFG * pCurrentMode;
 
 
 // The default name our device will appear as under ASIO and CoreAudio
-#define MY_DEVICE_NICK_NAME "MyProduct"
+#define MY_DEVICE_NICK_NAME "D&R Firewire Proto"
 
 
 // forward declaration
@@ -139,9 +139,6 @@ static void myAppCreateDAL(DAL_RATE_MODE_ENUM ratemode)
 	
 	//Execute the routing for this mode
 	pCurrentMode->fRouting(ratemode);
-	
-	//The routing might have changed so we need to update the meter indices
-	meterUpdateIndices ();
 	
 	
 	STREAM_CFG * pCfg;
@@ -384,11 +381,11 @@ static HRESULT myDalCallBack (DAL_CB_EVENT_MASK events, DAL_EVENTS * pExtEvents,
 static void updateStatusLEDs(void)
 {
 	if (LEDmode) return;
-	targetSetLED (TGT_LED2, driverAttached ? TGT_LED_ON : TGT_LED_OFF);
-	targetSetLED (TGT_LED3, isLocked  ? TGT_LED_ON : TGT_LED_OFF);
-	targetSetLED (TGT_LED4, aesIsMasterLocked () ? TGT_LED_ON : TGT_LED_OFF);
-	targetSetLED (TGT_LED5, adatIsLocked(0) ? TGT_LED_ON : TGT_LED_OFF);
-	targetSetLED (TGT_LED6, adatIsLocked(1) ? TGT_LED_ON : TGT_LED_OFF);
+	targetSetLED (TGT_LED4, driverAttached ? TGT_LED_ON : TGT_LED_OFF);
+	targetSetLED (TGT_LED5, isLocked  ? TGT_LED_ON : TGT_LED_OFF);
+	targetSetLED (TGT_LED3, aesIsMasterLocked () ? TGT_LED_ON : TGT_LED_OFF);
+//	targetSetLED (TGT_LED5, adatIsLocked(0) ? TGT_LED_ON : TGT_LED_OFF);
+//	targetSetLED (TGT_LED6, adatIsLocked(1) ? TGT_LED_ON : TGT_LED_OFF);
 }
 
 HRESULT myAppSetLEDMode (bool mode)
@@ -397,19 +394,6 @@ HRESULT myAppSetLEDMode (bool mode)
 	updateStatusLEDs();
 	return NO_ERROR;
 }
-
-static void myMeterThread(void *dummy)
-{	
-	DO_FOREVER
-	{	
-		TCTaskWait(100); //every 100ms
-		if (LEDmode)
-		{
-			targetSetAllLED (meterGetLED());
-		}
-	}
-}
-		
 
 
 // This thread just toggles the LED1
@@ -535,17 +519,8 @@ EVM_CFG evmCfg; //initialized to all zero
 HRESULT	myAppInitialize(void)
 {
 	HRESULT hResult = NO_ERROR;	
+	uint32 mode = 0;
 	
-	// Initialize the SPI devices (targetBoard.c)
-	targetSpiInit();
-	// Show the initial switch settings
-	uint32 sw = targetGetInitialSW ();
-	sysDebugPrintf("Initial SW Settings\r\n");
-	sysDebugPrintf(" 1  2  3  4\r\n");
-	sysDebugPrintf("[%c][%c][%c][%c]\r\n",(sw&1)?'1':'0',(sw&2)?'1':'0',(sw&4)?'1':'0',(sw&8)?'1':'0');
-	
-	// Initialize the mode based on switch settings
-	uint32 mode = (sw >> 1) & 0x07;
 
 	//Initialize the persistent storage system and check the stored mode
 	hResult = spsInitialize ("evm_sps", 2, sizeof(evmCfg), &evmCfg, 100);
@@ -553,7 +528,7 @@ HRESULT	myAppInitialize(void)
 	{
 		sysLogError(hResult, __LINE__, __FILE__);
 	}
-	if (sw&1) //use Flash for current mode
+	if (1) //use Flash for current mode
 	{
 		sysDebugPrintf("Using Flash based mode\r\n");
 
@@ -592,7 +567,6 @@ HRESULT myAppInitializeTasks(void)
 	HRESULT hResult = NO_ERROR;
 	
 	hResult = TCTaskCreate(&myAppThreadID, myAppThreadName, myAppThread, TASK_PRIORITY_DEFAULT, TASK_STACKSIZE_DEFAULT);
-	hResult = TCTaskCreate(&myMeterThreadID, myMeterThreadName, myMeterThread, TASK_PRIORITY_DEFAULT, TASK_STACKSIZE_DEFAULT);
 	if (hResult != NO_ERROR) return hResult;
 
 	return hResult;
@@ -608,8 +582,6 @@ HRESULT myAppResumeTasks(void)
 
 	hResult = TCTaskResume(myAppThreadID);
 	if (hResult != NO_ERROR) return hResult;
-	hResult = TCTaskResume(myMeterThreadID);	
-	if (hResult != NO_ERROR) return hResult;
 	
 	return hResult;
 }
@@ -622,9 +594,6 @@ HRESULT myAppSuspendTasks(void)
 	HRESULT hResult = NO_ERROR;
 
 	hResult = TCTaskSuspend(myAppThreadID);
-	if (hResult != NO_ERROR) return hResult;
-
-	hResult = TCTaskSuspend(myMeterThreadID);
 	if (hResult != NO_ERROR) return hResult;
 	
 	return hResult;
