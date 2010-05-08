@@ -111,8 +111,8 @@
 #define THIS_CATEGORY_ID			CAT_ID_DICE
 
 
-#define THIS_PRODUCT_ID				kTCAT_DICE_DEVICE_2_ID
-#define THIS_PRODUCT_NAME			TCAT_STRINGIFY(kTCAT_DICE_DEVICE_2_MODEL_ID)
+#define THIS_PRODUCT_ID				kTCAT_DICE_DEVICE_3_ID
+#define THIS_PRODUCT_NAME			TCAT_STRINGIFY(kTCAT_DICE_DEVICE_3_MODEL_ID)
 
 
 //--------------------------------------------------------------------------------

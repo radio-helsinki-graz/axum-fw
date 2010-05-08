@@ -59,18 +59,18 @@ void targetBoardInit(void)
 		// GPCSR_AUDIO_SEL  0000 0000 0000 0011 1110 1000 1010 1010
 		//             HEX     0    0    0    3    e    8    a    a
 		//---------------------------------------------------------
-		// AES0_RX          .... .... .... .... .... .... .... ..10  AES0 Rx Source is Port1
-		// AES1_RX          .... .... .... .... .... .... .... 10..  AES1 Rx Source is Port1
-		// AES2_RX          .... .... .... .... .... .... ..10 ....  AES2 Rx Source is Port1
-		// AES3_RX          .... .... .... .... .... .... 10.. ....  AES3 Rx Source is Port1
+		// AES0_RX          .... .... .... .... .... .... .... ..00  AES0 Rx Source is off 
+		// AES1_RX          .... .... .... .... .... .... .... 00..  AES1 Rx Source is off
+		// AES2_RX          .... .... .... .... .... .... ..00 ....  AES2 Rx Source is off
+		// AES3_RX          .... .... .... .... .... .... 00.. ....  AES3 Rx Source is off
 		// AO0_0            .... .... .... .... .... ...0 .... ....  Port0 Line 0 is InS0_0
 		// AO0_1            .... .... .... .... .... ..0. .... ....  Port0 Line 1 is InS0_1
-		// AO0_2            .... .... .... .... .... 10.. .... ....  Port0 Line 2 is ADAT0
-		// AO0_3            .... .... .... .... ..10 .... .... ....  Port0 Line 3 is ADAT1
-		// AO1_0            .... .... .... .... .1.. .... .... ....  Port1 Line 0 is AES0
-		// AO1_1            .... .... .... .... 1... .... .... ....  Port1 Line 1 is AES1
-		// AO1_2            .... .... .... ...1 .... .... .... ....  Port1 Line 2 is AES2
-		// AO1_3            .... .... .... ..1. .... .... .... ....  Port1 Line 3 is AES3
+		// AO0_2            .... .... .... .... .... 00.. .... ....  Port0 Line 2 is InS0_2
+		// AO0_3            .... .... .... .... ..00 .... .... ....  Port0 Line 3 is InS0_3
+		// AO1_0            .... .... .... .... .0.. .... .... ....  Port1 Line 0 is InS1_0
+		// AO1_1            .... .... .... .... 0... .... .... ....  Port1 Line 1 is InS1_1
+		// AO1_2            .... .... .... ...0 .... .... .... ....  Port1 Line 2 is InS1_2
+		// AO1_3            .... .... .... ..0. .... .... .... ....  Port1 Line 3 is InS1_3
 		audioPortDefault = 0x1755;
 		
 
@@ -83,21 +83,21 @@ void targetBoardInit(void)
 		// GPCSR_GPIO_SEL   0000 0000 0000 0001 1110 0011 0100 1100
 		//             HEX     0    0    0    1    e    3    4    c
 		//---------------------------------------------------------
-		// GPIO0            .... .... .... .... .... .... .... ...0  GPIO0 not CLKE
-		// SPI              .... .... .... .... .... .... .... .10.  SPI b
-		// GPIO1            .... .... .... .... .... .... .... 1...  NCS2
+		// GPIO0            .... .... .... .... .... .... .... ...0  No CLKE, use GPIO
+		// SPI              .... .... .... .... .... .... .... .00.  No SPI
+		// GPIO1            .... .... .... .... .... .... .... 0...  No CS2, use GPIO
 		// GPIO2            .... .... .... .... .... .... ...0 ....  GPIO2
 		// GPIO3            .... .... .... .... .... .... ..0. ....  GPIO3
 		// GPIO4            .... .... .... .... .... .... 01.. ....  EXTFBR in/WCK
 		// GPIO5            .... .... .... .... .... ..11 .... ....  WCK out
-		// GPIO6            .... .... .... .... .... .0.. .... ....  GPIO6
-		// GPIO7            .... .... .... .... .... 0... .... ....  GPIO7
-		// GPIO8            .... .... .... .... ...0 .... .... ....  GPIO8
+		// GPIO6            .... .... .... .... .... .1.. .... ....  MCK1
+		// GPIO7            .... .... .... .... .... 1... .... ....  FCK1
+		// GPIO8            .... .... .... .... ...1 .... .... ....  BCK1
 		// ENC2             .... .... .... .... ..1. .... .... ....  No Encoder, use GPIO
 		// GPIO12           .... .... .... .... .1.. .... .... ....  WCKI
 		// GPIO13           .... .... .... .... 1... .... .... ....  WCKO
 		// ENC1             .... .... .... ...1 .... .... .... ....  No Encoder, use GPIO
-		*((volatile uint32 *) GPCSR_GPIO_SEL) = 0x1f000;
+		*((volatile uint32 *) GPCSR_GPIO_SEL) = 0x1ff40;
 	}
 	else //DICE Mini
 	{  
@@ -225,7 +225,7 @@ BOOL isChipDiceJR (void)
 }
 
 
-static uint8 ledMsk;
+static uint16 ledMsk;
 
 static void updateLED(void)
 {
@@ -233,7 +233,7 @@ static void updateLED(void)
 	return;
 }
 
-void targetSetAllLED (uint8 msk)
+void targetSetAllLED (uint16 msk)
 {
 	if (ledMsk != msk)
 	{
@@ -244,7 +244,7 @@ void targetSetAllLED (uint8 msk)
 
 void targetSetLED (TGT_LED led, TGT_LED_STATE state)
 {
-	uint8 msk;
+	uint16 msk;
 	
 	msk = ledMsk;
 	if (state==TGT_LED_OFF)

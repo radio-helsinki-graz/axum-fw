@@ -1,5 +1,8 @@
 *.[oa]
+*.db
 *~
+.*
 bin/*
 lib/*
 obj/*
+!.gitignore

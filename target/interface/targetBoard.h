@@ -125,7 +125,9 @@ typedef enum
 	TGT_LED5,
 	TGT_LED6,
 	TGT_LED7,
-	TGT_LED8
+	TGT_LED8,
+	TGT_LED9,
+	TGT_LED10
 } TGT_LED;
 
 typedef enum

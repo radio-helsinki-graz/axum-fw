@@ -113,7 +113,7 @@ static MODE_CFG * pCurrentMode;
 
 
 // The default name our device will appear as under ASIO and CoreAudio
-#define MY_DEVICE_NICK_NAME "D&R Firewire Proto"
+#define MY_DEVICE_NICK_NAME "D&R Axum FireWire"
 
 
 // forward declaration
@@ -381,11 +381,8 @@ static HRESULT myDalCallBack (DAL_CB_EVENT_MASK events, DAL_EVENTS * pExtEvents,
 static void updateStatusLEDs(void)
 {
 	if (LEDmode) return;
-	targetSetLED (TGT_LED4, driverAttached ? TGT_LED_ON : TGT_LED_OFF);
-	targetSetLED (TGT_LED5, isLocked  ? TGT_LED_ON : TGT_LED_OFF);
-	targetSetLED (TGT_LED3, aesIsMasterLocked () ? TGT_LED_ON : TGT_LED_OFF);
-//	targetSetLED (TGT_LED5, adatIsLocked(0) ? TGT_LED_ON : TGT_LED_OFF);
-//	targetSetLED (TGT_LED6, adatIsLocked(1) ? TGT_LED_ON : TGT_LED_OFF);
+	targetSetLED (TGT_LED9, driverAttached ? TGT_LED_ON : TGT_LED_OFF);
+	targetSetLED (TGT_LED10, isLocked  ? TGT_LED_OFF : TGT_LED_ON);
 }
 
 HRESULT myAppSetLEDMode (bool mode)
