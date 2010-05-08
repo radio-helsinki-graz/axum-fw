@@ -25,7 +25,6 @@
 #include "targetBoard.h"
 #include "lhl.h"
 #include "lhlbri.h"
-#include "spi.h"
 #include "targetConfigCSR.h"
 #include "lhlIRM.h"
 
@@ -41,8 +40,6 @@ void targetBoardInit(void)
 {
 	uint32 chipID;
 	//Example of target board init.
-
-
 	
 	chipID = *((volatile uint32 *) GPCSR_CHIP_ID);
 	
@@ -50,7 +47,7 @@ void targetBoardInit(void)
 	{  
 		//setting up chip select NCS2 for DICE JR only
 		*((volatile uint32 *) MEM_SCSLR2) = 0x02080000;
-		*((volatile uint32 *) MEM_SMSKR2) = 0x00000024;//SRAM, 512kb, set 0
+		*((volatile uint32 *) MEM_SMSKR2) = 0x00000020;//SRAM, 512kb, set 0
 		*((volatile uint32 *) MEM_SMTMGR_SET0) = 0x10000841;
 		*((volatile uint32 *) MEM_SMCTLR) = 0x20f; //set0=8bit all other sets 16 bits
 		
@@ -228,166 +225,12 @@ BOOL isChipDiceJR (void)
 }
 
 
-
-
-
-
-// SPI functionality
-
-//Adding blocking functionality to the SPI
-
-static uint32 codecSem, codecSSId;
-static uint32 cpldSem, cpldSSId;
-
-static void spi_slave_select(uint32 ssId)
-{
-	//not used here as both devices share SS
-}
-
-static void spi_slave_complete_sb(uint32 sid, uint32 * value)
-{
-	if (!value) return; //only read commands are blocking
-	if (sid == codecSSId)
-		TCSemaphoreSignal (codecSem);
-	else if (sid == cpldSSId)
-		TCSemaphoreSignal (cpldSem);
-}
-
-// The write command is non blocking except if the buffer is full in which case the the function will retry
-
-static void targetWriteGenericSPIWord (uint32 sid, uint32 w)
-{
-	HRESULT hResult;
-	
-	while (1)
-	{
-		hResult = spiOpNonBlock(sid, w, NULL);
-		if (hResult != SPI_ERROR_BUF_FULL) break;
-		TCTaskYield();
-	}
-}
-
-
-// The read command is blocking, it will match up each read to the corresponding return.
-// it can assume that each device will only have one outstanding read.
-
-static uint32 targetReadGenericSPIWord (uint32 sid, uint32 w)
-{
-	HRESULT hResult;
-	uint32 retval;
-	
-	while (1)
-	{
-		hResult = spiOpNonBlock(sid, w, &retval);
-		if (hResult != SPI_ERROR_BUF_FULL) break;
-		TCTaskYield();
-	}
-	//now wait for the matching reply
-	if (sid == codecSSId)
-		TCSemaphoreWait (codecSem);
-	else if (sid == cpldSSId)
-		TCSemaphoreWait (cpldSem);
-	return retval;
-}
-
-
-
-void targetWriteCPLDSPIWord (uint32 w)
-{
-	targetWriteGenericSPIWord (cpldSSId, w);
-}
-
-uint32 targetReadCPLDSPIWord (uint32 w)
-{
-	return targetReadGenericSPIWord (cpldSSId, w);
-}
-
-void targetWriteCodecSPIWord (uint32 w)
-{
-	targetWriteGenericSPIWord (codecSSId, w);
-}
-
-
-
-
-#define SPI_SPEED 10 //baudrate = 49152000/(8*(SPI_SPEED+1))
-
-static uint32 initialSwitchSetting;
-
-uint32 targetGetInitialSW (void)
-{
-	return initialSwitchSetting;
-}
-
-static uint32 cpldVer;
-static bool cpldSupported;
-
-void targetGetCPLDInfo (uint8 * ver, bool * bSupported)
-{
-	*ver = (uint8)cpldVer;
-	*bSupported = cpldSupported;
-}
-
-
-void targetSpiInit(void) 
-{
-
-	spiGetSlaveDevice(&cpldSSId);
-	spiGetSlaveDevice(&codecSSId);
-
-	spiConfigure(codecSSId, SPI_SET_SS_ROUTINE, spi_slave_select);
-	spiConfigure(codecSSId, SPI_COMPLETE_CB, spi_slave_complete_sb);
-	spiConfigure(codecSSId, SPI_RATE, (void *)SPI_SPEED);
-	spiConfigure(codecSSId, SPI_WSIZE, (void *)SPI_WSIZE_16);
-	spiConfigure(cpldSSId, SPI_COMPLETE_CB, spi_slave_complete_sb);
-	spiConfigure(cpldSSId, SPI_RATE, (void *)SPI_SPEED);
-	spiConfigure(cpldSSId, SPI_WSIZE, (void *)SPI_WSIZE_16);	
-	
-	TCSemaphoreOpen (&codecSem,0);
-	TCSemaphoreOpen (&cpldSem,0);
-	//at init time, let's talk to CPLD and initialize
-	//read the CPLD version
-	spiOpBlockNoTask(cpldSSId, CPLD_SPI_RD_CMD(CPLD_VER_REG,0), &cpldVer);
-	if (cpldVer>=255) cpldVer = 0;
-	cpldSupported = ((cpldVer >= 12) && (cpldVer < 128));
-	
-	if (cpldSupported) 
-	{
-		if (isChipDiceJR())
-			spiOpBlockNoTask(cpldSSId, CPLD_SPI_WR_CMD(CPLD_CTRL_REG,CPLD_CTRL_PAR_EN | 
-																	CPLD_CTRL_CODEC_EN | 
-																	CPLD_CTRL_SPI1_EN | 
-																	CPLD_CTRL_SPI2_EN | 
-																	CPLD_CTRL_USER_EN), NULL);
-		else
-			spiOpBlockNoTask(cpldSSId, CPLD_SPI_WR_CMD(CPLD_CTRL_REG,CPLD_CTRL_CODEC_EN | 
-																	CPLD_CTRL_SPI1_EN | 
-																	CPLD_CTRL_SPI2_EN | 
-																	CPLD_CTRL_USER_EN), NULL);	
- 		//read the switches
-		spiOpBlockNoTask(cpldSSId, CPLD_SPI_RD_CMD(CPLD_SW_REG,0), &initialSwitchSetting);
-	}
-	else
-		initialSwitchSetting = 0x0; //mode 0, not Meter mode
-	
-}	
-
-//Virtual LED and SW functions
-volatile uint8 * pTargetCpld = ((volatile uint8 *) 0x02080000);
-
 static uint8 ledMsk;
 
 static void updateLED(void)
 {
-	if (!cpldSupported) return;
-	if (isChipDiceJR())
-	{
-		pTargetCpld[CPLD_LED_REG] = ledMsk;
-	}
-	else
-	{
-		targetWriteCPLDSPIWord (CPLD_SPI_WR_CMD(CPLD_LED_REG,ledMsk));
-	}
+	*((volatile uint32 *) GPIO_A_DR) = ledMsk;
+	return;
 }
 
 void targetSetAllLED (uint8 msk)
@@ -412,21 +255,6 @@ void targetSetLED (TGT_LED led, TGT_LED_STATE state)
 		msk ^= 1<<led;
 	targetSetAllLED (msk);
 }
-
-extern uint8 targetGetSw (void)
-{
-	if (!cpldSupported) return initialSwitchSetting;
-	
-	if (isChipDiceJR())
-	{
-		return pTargetCpld[CPLD_SW_REG] & 0x0f;
-	}
-	else
-	{
-		return (uint8)targetReadCPLDSPIWord (CPLD_SPI_RD_CMD(CPLD_SW_REG,0)) & 0x0f;
-	}
-}
-
 
 
 // This function is called by the system when it needs to perform a

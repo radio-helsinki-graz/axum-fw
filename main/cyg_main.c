@@ -264,9 +264,9 @@ static HRESULT SplashCB(void)
 #ifdef _EAP
 	cliPrintf("* EAP is supported.                                      *\n");
 #endif
-	uint8 cpldVer;
-	bool cpldSupported;
-	targetGetCPLDInfo (&cpldVer, &cpldSupported);
+	uint8 cpldVer=0;
+	bool cpldSupported=0;
+	//targetGetCPLDInfo (&cpldVer, &cpldSupported);
 	cliPrintf("*                                                        *\n");
 	cliPrintf("* CPLD: (the CPLD handles Switch and LED's)              *\n");
 	cliPrintf("*   Ver: %01X.%01X %-44s*\n",(uint32)(cpldVer>>4)&0xf,cpldVer&0xf,cpldSupported?"Full LED/SW Support":"PLEASE UPDATE CPLD TO VER 1  OR HIGHER");
@@ -613,6 +613,7 @@ void init_thread_main(cyg_addrword_t data)
 	{
 		sysDebugPrintf("Could not initialize application\n");
 	}
+
     
 #ifdef _1394CORE
     lalInitialize1394Finish();

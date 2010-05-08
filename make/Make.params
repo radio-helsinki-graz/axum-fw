@@ -43,7 +43,7 @@ export KERNEL_NAME := $(OS)_$(CHIP)_$(BOARD)
 #cli debug
 BASE_MODULE := main target cli debug
 APP_MODULE := frmwload 1394lal fcp misc fis aml ftm sps crb
-CHIP_MODULE := dal gray dice avs 1394llc i2c spi
+CHIP_MODULE := dal dice avs 1394llc
 
 #DRIVER_MODULE can be ONLY ONE of "dicedriver, 1394avc, ogt"
 DRIVER_MODULE := dicedriver
@@ -78,6 +78,7 @@ CFLAGS = -c -I. -I${TC_DIR}/interface -I${TC_DIR}/../interface -I${COMMON_DIR}/m
 CFLAGS += -D_CLI_TOOL_MYAPP
 CFLAGS += -DAVS_USE_NEWTX
 CFLAGS += -D_MIXFIX_FIQ -D_MIXFIX_DAL -D_MIXFIX_PERFECT4 -D_FIQ  
+CFLAGS += -D_LEDS
 
 ###############################################################################
 #                     ECOS variables

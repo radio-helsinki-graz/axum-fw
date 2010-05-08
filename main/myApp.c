@@ -523,12 +523,12 @@ HRESULT	myAppInitialize(void)
 	
 
 	//Initialize the persistent storage system and check the stored mode
-	hResult = spsInitialize ("evm_sps", 2, sizeof(evmCfg), &evmCfg, 100);
+//	hResult = spsInitialize ("evm_sps", 2, sizeof(evmCfg), &evmCfg, 100);
 	if (hResult!=NO_ERROR)
 	{
 		sysLogError(hResult, __LINE__, __FILE__);
 	}
-	if (1) //use Flash for current mode
+	if (0) //use Flash for current mode
 	{
 		sysDebugPrintf("Using Flash based mode\r\n");
 

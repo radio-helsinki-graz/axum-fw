@@ -60,30 +60,30 @@ HRESULT akm4620_msgFunc (MYMODE_MSG msg, uint32 data0, uint32 data1)
 	switch (msg)
 	{
 		case MM_LOST_LOCK:
-			targetWriteCodecSPIWord (0xa100); //reset AKM codec, this will also mute
+//			targetWriteCodecSPIWord (0xa100); //reset AKM codec, this will also mute
 			break;
 				
 		case MM_GOT_LOCK:
 			//some codec's might need the I2S setup to change when the mode changes
 			//that is not the case with our AKM4620 as we always run 512 base rate.
 			
-			targetWriteCodecSPIWord (0xa100); //reset	
+//			targetWriteCodecSPIWord (0xa100); //reset	
 			switch (data0)
 			{
 				default:
 				case eDAL_RATE_MODE_LOW:
-					targetWriteCodecSPIWord (0xa264);
+//					targetWriteCodecSPIWord (0xa264);
 					break;
 					
 				case eDAL_RATE_MODE_MID:
-					targetWriteCodecSPIWord (0xa265);
+//					targetWriteCodecSPIWord (0xa265);
 					break;
 					
 				case eDAL_RATE_MODE_HIGH:
-					targetWriteCodecSPIWord (0xa266);
+//					targetWriteCodecSPIWord (0xa266);
 					break;
 			}
-			targetWriteCodecSPIWord (0xa103); //un-reset	
+//			targetWriteCodecSPIWord (0xa103); //un-reset	
 			break;					
 	
 	}
