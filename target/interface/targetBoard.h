@@ -147,6 +147,6 @@ only be called from thread context.
 ****************************************************************************/
 
 extern void targetSetLED (TGT_LED led, TGT_LED_STATE state);
-extern void targetSetAllLED (uint8 msk);
+extern void targetSetAllLED (uint16 msk);
 
 #endif //_TARGETBOARD_H

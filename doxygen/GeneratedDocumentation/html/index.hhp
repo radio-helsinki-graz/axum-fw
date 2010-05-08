@@ -1,0 +1,88 @@
+[OPTIONS]
+Compiled file=../help/DiceJrMiniFirmwareUserCompiledHelp.chm
+Compatibility=1.1
+Full-text search=Yes
+Contents file=index.hhc
+Default Window=main
+Default topic=main.html
+Index file=index.hhk
+Language=0x409 English (United States)
+Title=DICE Firmware
+
+[WINDOWS]
+main="DICE Firmware","index.hhc","index.hhk","main.html","main.html",,,,,0x23520,,0x387e,,,,,,,,0
+
+[FILES]
+main.html
+annotated.html
+classes.html
+functions.html
+functions_vars.html
+struct_a_v_c___d_r_i_v_e_r___c_b___d_a_t_a.html
+struct_c_r_b_element__t.html
+struct_d_a_l___c_o_n_f_i_g.html
+struct_d_a_l___e_v_e_n_t_s.html
+struct_d_a_l___s_t_a_t_u_s.html
+struct_d_i_c_e___d_r_i_v_e_r___c_b___d_a_t_a.html
+struct_l_a_l___a_d_d_r___r_a_n_g_e.html
+struct_l_a_l___b_u_s___r_e_s_e_t___i_n_f_o.html
+struct_l_a_l___d_e_v_i_c_e___i_n_f_o.html
+struct_m_o_d_e___c_f_g.html
+struct_p_b___h_e_a_d_e_r.html
+struct_p_b___p_a_r_a_m_s.html
+union_s_r_c___d_e_s_c_r_i_p_t_i_o_n.html
+struct_s_t_r_e_a_m___c_f_g.html
+struct_s_t_r_e_a_m___c_o_n_f_i_g.html
+structt_d_a_l___r_o_u_t_i_n_g___e_n_t_r_y.html
+cliusage.html
+errorcodes.html
+versionref.html
+group___application.html
+group__my_app.html
+group__my_mode.html
+group___d_a_l.html
+group___f_c_p.html
+group___a_v_c.html
+group__m_l_a_n.html
+group___dice_driver.html
+group___avc_driver.html
+group___firmware_load.html
+group___core.html
+group___link_abstraction_layer.html
+group___a_v_s.html
+group___c_m_p.html
+group___i_r_m.html
+group___a_m_l.html
+group___programming.html
+group___c_l_i.html
+group___packet_blocks.html
+group___memory_pool_manager.html
+group___lock_handler.html
+group___key_value.html
+group___data_streams.html
+group___i2_c.html
+group___r_t_o_s.html
+group___r_t_o_s_task.html
+group___r_t_o_s_time.html
+group___r_t_o_s_semaphore.html
+group___r_t_o_s_queue.html
+group___a_v_s_int.html
+group___a_vs_init.html
+group___a_v_s_s_c.html
+group___a_v_s_format.html
+group___a_v_s_int_format.html
+group___c_m_p_init.html
+group___c_m_p_b_c.html
+group___c_m_p_p2_p.html
+group___bus_reset_interface.html
+group___info_and_handles.html
+group___address_range_callback.html
+group___l_a_l_async.html
+group___l_a_l_async_stream.html
+group___e_a_p.html
+group___callback_registry.html
+group___c_m_s.html
+group___c_m_s_a_v_s.html
+group___config_rom_builder.html
+modules.html
+pages.html

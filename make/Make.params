@@ -30,7 +30,7 @@ export HOST := CYGWIN
 ##
 export CHIP := diceJr
 export OS := ecos
-export BOARD := Dice_test
+export BOARD := axumFW
 
 export APPL_PROJECT_NAME := ${BOARD}
 export APPL_PRODUCT_NAME := $(BOARD)

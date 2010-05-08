@@ -25,16 +25,16 @@ goto end
 
 :all
 echo make all
-%CYGWIN_PATH%\bin\bash.exe -login -c "cd ${TC_DIR}/project/Dice_test/make;make -s dep AWK_PIPE=1"
+%CYGWIN_PATH%\bin\bash.exe -login -c "cd ${TC_DIR}/project/axumFW/make;make -s dep AWK_PIPE=1"
 @goto end
 
 :rebuild
 echo rebuild all
-%CYGWIN_PATH%\bin\bash.exe -login -c "cd ${TC_DIR}/project/Dice_test/make;make clean AWK_PIPE=1;make install AWK_PIPE=1"
+%CYGWIN_PATH%\bin\bash.exe -login -c "cd ${TC_DIR}/project/axumFW/make;make clean AWK_PIPE=1;make install AWK_PIPE=1"
 @goto end
 
 :clean
 echo make clean
-%CYGWIN_PATH%\bin\bash.exe -login -c "cd ${TC_DIR}/project/Dice_test/make;make clean"
+%CYGWIN_PATH%\bin\bash.exe -login -c "cd ${TC_DIR}/project/axumFW/make;make clean"
 @goto end
 :end

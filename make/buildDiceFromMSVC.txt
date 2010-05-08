@@ -1,7 +1,7 @@
-Building Dice_test from MS Visual C++
+Building axumFW from MS Visual C++
 ----------------------------------------
 
-Load the Visual C++ project workspace file firmware/project/Dice_test/Dice_test.sln
+Load the Visual C++ project workspace file firmware/project/axumFW/axumFW.sln
 
 The Firmware folders and files are available under FileView
 
@@ -11,18 +11,18 @@ The Firmware folders and files are available under FileView
 
 The following options are available for building the firmware application:
 
-- Build:Build Dice_test
+- Build:Build axumFW
 	(calling vc_make.bat with arguments "all $(ProjectDir)" thus going to the current project dir and performing)
 	make -s dep AWK_PIPE=1
 
 	This rebuilds the application code, and assumes that the kernel has been built.
-	If the kernel has not been built, perform the Build:Rebuild Dice_test
+	If the kernel has not been built, perform the Build:Rebuild axumFW
 	
-- Build:Rebuild Dice_test
+- Build:Rebuild axumFW
 	(calling vc_make.bat with arguments "rebuild $(ProjectDir)" thus going to the current project dir and performing)
 	make clean AWK_PIPE=1;make install AWK_PIPE=1
 
-- Build:Clean Dice_test
+- Build:Clean axumFW
 	(calling vc_make.bat with arguments "clean $(ProjectDir)" thus going to the current project dir and performing)
 	make clean
 
@@ -42,7 +42,7 @@ Create the tools this way:
 	* Fill out the fields below for launching Insight with the default binary built 
 	for this project.
 
-	Tool:			&Debug Dice_testDebug
+	Tool:			&Debug axumFWDebug
 	Command:		$(ProjectDir)\vc_insight.bat
 	Arguments:		$(ProjectDir) $(TargetName)
 	Initial Directory:	$(ProjectDir)

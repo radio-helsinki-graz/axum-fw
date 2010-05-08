@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Dice_test", "Dice_test.vcproj", "{00BCE038-AFC4-4E86-B698-4ED58BF82901}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "axumFW", "axumFW.vcproj", "{00BCE038-AFC4-4E86-B698-4ED58BF82901}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D4D9A83A-87D2-44F9-B9CA-E4D4C1C6C1AB}"
 	ProjectSection(SolutionItems) = preProject
