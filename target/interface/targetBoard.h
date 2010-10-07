@@ -118,16 +118,16 @@ typedef enum
 
 typedef enum
 {
-	TGT_LED1,
-	TGT_LED2,
-	TGT_LED3,
-	TGT_LED4,
-	TGT_LED5,
-	TGT_LED6,
-	TGT_LED7,
-	TGT_LED8,
-	TGT_LED9,
-	TGT_LED10
+	TGT_LED1 = 1,
+	TGT_LED2 = 2,
+	TGT_LED3 = 3,
+	TGT_LED4 = 4,
+	TGT_LED5 = 5,
+	TGT_LED6 = 6,
+	TGT_LED7 = 7,
+	TGT_LED8 = 8,
+	TGT_LED9 = 9,
+	TGT_LED10 = 10
 } TGT_LED;
 
 typedef enum
